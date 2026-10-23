@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Invitación Especial para Britani ✨</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fuentes estilo garabato / historieta super lindas -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Handlee&display=swap" rel="stylesheet">
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Handlee', cursive, sans-serif;
+            box-sizing: border-box;
+        }
+
+        .title-font {
+            font-family: 'Fredoka', cursive, sans-serif;
+        }
+
+        input, select, textarea, button {
+            font-size: 16px !important;
+            font-family: 'Handlee', cursive, sans-serif;
+        }
+
+        body {
+            background-color: #0c0f1d;
+            background-image: 
+                radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 0);
+            background-size: 24px 24px;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        /* Dibujos flotantes y destellos en segundo plano */
+        .doodle-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .doodle-star {
+            position: absolute;
+            color: #ffd166;
+            animation: doodleFloat var(--duration, 4s) infinite ease-in-out var(--delay, 0s);
+            will-change: transform, opacity;
+            user-select: none;
+        }
+
+        @keyframes doodleFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg) scale(0.9); opacity: 0.3; }
+            50% { transform: translateY(-12px) rotate(15deg) scale(1.1); opacity: 0.9; }
+        }
+
+        /* Estilo Borde Dibujado a Mano (Sketch / Wavy card) */
+        .sketch-card {
+            background: rgba(15, 23, 42, 0.92);
+            border: 3.5px solid #38bdf8;
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            box-shadow: 6px 8px 0px rgba(56, 189, 248, 0.3), 0 20px 40px rgba(0,0,0,0.6);
+            backdrop-filter: blur(12px);
+            position: relative;
+        }
+
+        .sketch-btn {
+            border: 3px solid #38bdf8;
+            border-radius: 255px 15px 225px 15px/15px 225px 15px 255px;
+            box-shadow: 4px 4px 0px #0284c7;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            will-change: transform, box-shadow;
+        }
+
+        .sketch-btn:active {
+            transform: translate(2px, 2px) scale(0.97);
+            box-shadow: 1px 1px 0px #0284c7;
+        }
+
+        /* Borde RGB Dibujado para la música */
+        .rgb-sketch-wrapper {
+            position: relative;
+            border-radius: 20px 225px 20px 255px/225px 20px 255px 20px;
+            padding: 4px;
+            overflow: hidden;
+            background: #0f172a;
+            box-shadow: 3px 4px 0px rgba(0, 0, 0, 0.5);
+        }
+
+        .rgb-sketch-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -60%;
+            width: 220%;
+            height: 220%;
+            background: conic-gradient(
+                #000000 0deg,
+                #3b82f6 120deg,
+                #ef4444 240deg,
+                #000000 360deg
+            );
+            animation: rotateRGB 3.5s linear infinite;
+        }
+
+        @keyframes rotateRGB {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Estrellas Fugaces */
+        .shooting-star {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1), 0 0 0 8px rgba(255, 255, 255, 0.1), 0 0 20px rgba(56, 189, 248, 1);
+            animation: animateShootingStar 3s linear infinite;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, #38bdf8, transparent);
+        }
+
+        @keyframes animateShootingStar {
+            0% {
+                transform: rotate(315deg) translateX(0);
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(315deg) translateX(-600px);
+                opacity: 0;
+            }
+        }
+
+        .rgb-inner-sketch {
+            position: relative;
+            background: rgba(15, 23, 42, 0.96);
+            border-radius: 16px;
+            z-index: 1;
+        }
+
+        /* Transiciones entre paneles */
+        .panel-hidden {
+            display: none !important;
+            opacity: 0;
+            transform: translate3d(0, 20px, 0) scale(0.95);
+            pointer-events: none;
+        }
+
+        .panel-visible {
+            display: flex !important;
+            opacity: 1;
+            transform: translate3d(0, 0, 0) scale(1);
+            transition: opacity 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            will-change: transform, opacity;
+        }
+
+        /* Animación Mezclado Dibujado (Shuffling) */
+        .anim-shuffle-1 { animation: shuffleSketch1 3s ease-in-out infinite; }
+        .anim-shuffle-2 { animation: shuffleSketch2 3s ease-in-out infinite; }
+        .anim-shuffle-3 { animation: shuffleSketch3 3s ease-in-out infinite; }
+
+        @keyframes shuffleSketch1 {
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+            25% { transform: translate3d(105%, -15px, 0) rotate(8deg) scale(1.05); }
+            50% { transform: translate3d(-105%, 15px, 0) rotate(-8deg) scale(0.95); }
+            75% { transform: translate3d(0, 0, 0) rotate(3deg); }
+        }
+
+        @keyframes shuffleSketch2 {
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+            25% { transform: translate3d(-105%, 15px, 0) rotate(-8deg) scale(0.95); }
+            50% { transform: translate3d(105%, -15px, 0) rotate(8deg) scale(1.05); }
+            75% { transform: translate3d(0, 0, 0) rotate(-3deg); }
+        }
+
+        @keyframes shuffleSketch3 {
+            0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+            25% { transform: translate3d(105%, 10px, 0) rotate(5deg); }
+            50% { transform: translate3d(-105%, -10px, 0) rotate(-5deg); }
+            75% { transform: translate3d(0, 0, 0) rotate(0deg); }
+        }
+
+        /* Ocultar iframe de audio */
+        .hidden-audio-player {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+            left: -9999px;
+        }
+
+        /* Modal Overlay Estilo Dibujo */
+        .modal-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(6, 9, 19, 0.88);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: scale(0.9);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        .sketch-badge {
+            border: 2px dashed #38bdf8;
+            border-radius: 12px;
+            padding: 2px 8px;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4 min-h-screen text-slate-100">
+
+    <!-- Fondo de Dibujos y Estrellas -->
+    <div id="doodles-bg" class="doodle-container"></div>
+
+    <!-- Botón Mute/Unmute Estilo Dibujo Fijo Top-Right -->
+    <div class="fixed top-4 right-4 z-50 flex items-center">
+        <button id="music-btn" onclick="toggleAudio()" class="sketch-btn bg-slate-900 border-2 border-cyan-400 p-3 rounded-full text-cyan-300 shadow-lg transition-all active:scale-90 flex items-center justify-center">
+            <span id="music-icon" class="text-xl">🎵</span>
+        </button>
+    </div>
+
+    <!-- Reproductor YouTube Oculto con la canción exacta (IryOLXtyTRU) -->
+    <div id="youtube-audio-container" class="hidden-audio-player">
+        <iframe id="youtube-player" 
+                src="https://www.youtube.com/embed/IryOLXtyTRU?enablejsapi=1&autoplay=1&loop=1&playlist=IryOLXtyTRU&playsinline=1" 
+                allow="autoplay">
+        </iframe>
+    </div>
+
+    <!-- Contenedor Principal Card Estilo Dibujo Lindo -->
+    <div class="w-full max-w-sm sketch-card p-6 text-center relative z-10 overflow-hidden min-h-[500px] flex flex-col justify-center border-3">
+        
+        <!-- Modal de Confirmación de Regalo Dibujado -->
+        <div id="confirm-modal" class="modal-overlay">
+            <div class="bg-slate-900 border-3 border-cyan-400 rounded-3xl p-5 text-center space-y-4 max-w-xs w-full shadow-2xl sketch-card">
+                <div class="text-5xl animate-bounce">🎁✨</div>
+                <h3 class="title-font text-lg font-bold text-cyan-300 leading-snug">
+                    ¿Segura quieres este regalo?
+                </h3>
+                <p class="text-sm text-cyan-100/90 font-medium">
+                    Solo tendrás 1 oportunidad 🤫✏️
+                </p>
+                <div class="flex flex-col space-y-2.5 pt-2">
+                    <button onclick="confirmarEleccionRegalo()" class="w-full py-2.5 px-4 bg-cyan-500 hover:bg-cyan-400 text-slate-900 title-font font-bold text-sm sketch-btn border-2 border-cyan-200">
+                        ¡Sí, acepto este! 💖
+                    </button>
+                    <button onclick="cancelarEleccionRegalo()" class="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-700 text-cyan-200 title-font font-semibold text-sm sketch-btn border-2 border-slate-600">
+                        Elegir otro 🔄
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PANEL 1: INICIO ================= -->
+        <div id="panel-1" class="panel-visible flex-col items-center justify-center space-y-4">
+            
+            <!-- Imagen Perfil Inicial Actualizada Circular Dibujada -->
+            <div class="relative group mx-auto">
+                <div class="absolute -inset-1 bg-cyan-400 rounded-full blur opacity-50"></div>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9CgDBsiOyeHfL10lhaVgfFhSzYC25jCe4Z7k7Kr_dsw&s=10" 
+                     alt="Perfil Britani" 
+                     class="relative w-24 h-24 rounded-full object-cover border-4 border-cyan-300 shadow-md p-0.5 bg-slate-900"
+                     onerror="this.src='https://placehold.co/120x120/1e293b/38bdf8?text=Britani'">
+            </div>
+
+            <!-- Cuadro de Música Estilo Dibujo con Borde RGB (Negro, Azul, Rojo) -->
+            <div class="rgb-sketch-wrapper w-full max-w-[260px] mx-auto my-1">
+                <div class="rgb-inner-sketch p-3 flex items-center justify-between space-x-3">
+                    <div class="flex items-center space-x-2.5 overflow-hidden">
+                        <div class="w-9 h-9 rounded-full bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center flex-shrink-0">
+                            <span class="text-cyan-300 text-base animate-spin" style="animation-duration: 4s;">✨</span>
+                        </div>
+                        <div class="text-left overflow-hidden">
+                            <p class="text-[10px] uppercase tracking-wider text-cyan-400 font-bold title-font">Música especial 🎶</p>
+                            <p class="text-xs text-slate-200 font-semibold truncate">Canción para Britani ✨</p>
+                        </div>
+                    </div>
+                    <button onclick="toggleAudio()" class="text-cyan-300 hover:text-white p-1 rounded-lg transition text-base">
+                        ▶️/⏸️
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mensaje -->
+            <div class="space-y-1">
+                <h2 class="title-font text-lg font-bold text-cyan-300 tracking-wide uppercase">
+                    ¡Holis BRITANI! 🎨✨
+                </h2>
+                <p class="text-sm text-slate-200 font-medium leading-relaxed px-1">
+                    Hoy quiero invitarte a salir, así que tú eliges tu regalo 🎁✏️
+                </p>
+            </div>
+
+            <!-- Botón Elegir -->
+            <button onclick="iniciarJuego()" class="w-full max-w-xs py-3 px-6 bg-cyan-400 hover:bg-cyan-300 text-slate-950 title-font font-bold text-sm sketch-btn border-2 border-cyan-100 mt-2">
+                ¡Toca aquí para elegir! 🎲
+            </button>
+        </div>
+
+        <!-- ================= PANEL 2: MEZCLADO Y SELECCIÓN ================= -->
+        <div id="panel-2" class="panel-hidden flex-col items-center justify-center space-y-6">
+            <div>
+                <h3 id="shuffle-title" class="title-font text-lg font-bold text-cyan-300 leading-tight">
+                    ¡Mezclando los regalos...! 🔀
+                </h3>
+                <p id="shuffle-subtitle" class="text-xs text-slate-300 mt-1">
+                    ¡Sigue la caja de tu intuición! ✨
+                </p>
+            </div>
+
+            <!-- Cajas de Regalo Dibujadas -->
+            <div class="flex justify-center items-center space-x-3 py-6 w-full px-2">
+                <button onclick="seleccionarRegalo(0)" class="gift-box sketch-btn p-3 bg-slate-800 hover:bg-slate-700 border-3 border-cyan-400 rounded-2xl flex-1 max-w-[95px] h-32 flex flex-col items-center justify-center shadow-lg">
+                    <span class="text-5xl filter drop-shadow transform hover:scale-110 transition duration-200">🎁</span>
+                </button>
+                <button onclick="seleccionarRegalo(1)" class="gift-box sketch-btn p-3 bg-slate-800 hover:bg-slate-700 border-3 border-cyan-400 rounded-2xl flex-1 max-w-[95px] h-32 flex flex-col items-center justify-center shadow-lg">
+                    <span class="text-5xl filter drop-shadow transform hover:scale-110 transition duration-200">🎁</span>
+                </button>
+                <button onclick="seleccionarRegalo(2)" class="gift-box sketch-btn p-3 bg-slate-800 hover:bg-slate-700 border-3 border-cyan-400 rounded-2xl flex-1 max-w-[95px] h-32 flex flex-col items-center justify-center shadow-lg">
+                    <span class="text-5xl filter drop-shadow transform hover:scale-110 transition duration-200">🎁</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= PANEL 3: RESULTADO DE REGALO ================= -->
+        <div id="panel-3" class="panel-hidden flex-col items-center justify-center space-y-4">
+            <span class="title-font text-xs font-semibold uppercase tracking-wider text-cyan-300 sketch-badge bg-cyan-950/80">
+                ¡Premio Revelado! 🎉
+            </span>
+
+            <!-- Imagen Circular del Premio Ganado -->
+            <div class="relative my-2">
+                <div class="absolute -inset-1 bg-cyan-400 rounded-full blur opacity-60"></div>
+                <img id="prize-img" src="" alt="Premio" class="relative w-28 h-28 rounded-full object-cover border-4 border-cyan-300 shadow-xl mx-auto p-0.5 bg-slate-900">
+            </div>
+
+            <!-- Título del Premio -->
+            <h3 id="prize-title" class="title-font text-base font-bold text-cyan-200 leading-snug px-2">
+                <!-- Se llena dinámicamente -->
+            </h3>
+
+            <!-- Botón Enviar Resultado -->
+            <button onclick="iniciarCarga()" class="w-full max-w-xs py-3 px-6 bg-cyan-400 hover:bg-cyan-300 text-slate-950 title-font font-bold text-sm sketch-btn border-2 border-cyan-100 mt-2">
+                Enviar resultado 🚀
+            </button>
+        </div>
+
+        <!-- ================= PANEL 4: CARGA ================= -->
+        <div id="panel-4" class="panel-hidden flex-col items-center justify-center space-y-5">
+            <div class="text-5xl animate-bounce">🎨✨</div>
+            <h3 class="title-font text-base font-bold text-cyan-300">
+                Procesando tu regalo...
+            </h3>
+            
+            <div class="w-full bg-slate-900 rounded-full h-4 border-2 border-cyan-400 overflow-hidden p-0.5">
+                <div id="progress-bar" class="bg-gradient-to-r from-cyan-400 to-blue-400 h-full rounded-full transition-all duration-100 ease-out" style="width: 0%"></div>
+            </div>
+            
+            <p id="progress-text" class="title-font text-sm font-bold text-cyan-300">0%</p>
+        </div>
+
+        <!-- ================= PANEL 5: FECHA Y HORARIO ================= -->
+        <div id="panel-5" class="panel-hidden flex-col items-center justify-center space-y-4">
+            <h3 class="title-font text-lg font-bold text-cyan-300 leading-snug">
+                ¡Casi listo! 🗓️✏️
+            </h3>
+            <p class="text-xs text-slate-200 leading-relaxed px-1">
+                Necesito una fecha y hora para ponernos de acuerdo e ir por tu regalo ✨
+            </p>
+
+            <form onsubmit="guardarFechaHora(event)" class="w-full space-y-3 pt-1">
+                
+                <!-- Selector Compacto de Fecha -->
+                <div class="flex flex-col items-center">
+                    <label class="title-font text-xs font-semibold text-cyan-300 mb-1">¿Qué día prefieres?</label>
+                    <input type="date" id="input-date" required class="w-48 bg-slate-800 text-cyan-100 text-xs font-semibold px-3 py-2 rounded-xl border-2 border-cyan-400 text-center sketch-btn">
+                </div>
+
+                <!-- Barra para Escribir Horario/Notas -->
+                <div class="flex flex-col items-center">
+                    <label class="title-font text-xs font-semibold text-cyan-300 mb-1">¿A qué hora podemos vernos?</label>
+                    <input type="text" id="input-time" placeholder="Ej: A las 6:00 PM o al salir..." required class="w-full bg-slate-800 text-cyan-100 text-xs px-3 py-2.5 rounded-xl border-2 border-cyan-400 placeholder-slate-400 text-center sketch-btn">
+                </div>
+
+                <button type="submit" class="w-full py-3 px-6 bg-cyan-400 hover:bg-cyan-300 text-slate-950 title-font font-bold text-sm sketch-btn border-2 border-cyan-100 mt-2">
+                    Enviar regalo seleccionado 💌
+                </button>
+            </form>
+        </div>
+
+        <!-- ================= PANEL 6: ENVIADO ================= -->
+        <div id="panel-6" class="panel-hidden flex-col items-center justify-center space-y-4">
+            
+            <!-- Imagen Perfil de Confirmación Circular Dibujada -->
+            <div class="relative my-1">
+                <div class="absolute -inset-1 bg-green-400 rounded-full blur opacity-60"></div>
+                <img src="https://thumbs.dreamstime.com/b/mensaje-enviado-con-%C3%A9xito-por-correo-electr%C3%B3nico-icono-verificado-una-ilustraci%C3%B3n-simple-y-limpia-de-un-sobre-abierto-marca-391448142.jpg" 
+                     alt="Enviado" 
+                     class="relative w-24 h-24 rounded-full object-cover border-4 border-cyan-300 shadow-xl mx-auto p-0.5 bg-slate-900"
+                     onerror="this.src='https://placehold.co/100x100/1e293b/38bdf8?text=Enviado'">
+            </div>
+
+            <h3 class="title-font text-lg font-bold text-cyan-300">
+                ¡Todo listo! ✨✉️
+            </h3>
+
+            <p class="text-sm text-slate-200 leading-relaxed px-2">
+                Tu regalo que te salió ha sido enviado 📩🥰
+            </p>
+
+            <!-- Botón Ver Todo Otra Vez -->
+            <button onclick="reiniciarJuego()" class="w-full max-w-xs py-3 px-6 bg-slate-800 hover:bg-slate-700 text-cyan-300 title-font font-bold text-xs sketch-btn border-2 border-cyan-400 mt-2">
+                Ver todo otra vez 🔄
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Opciones de Premios
+        const PREMIOS = [
+            {
+                nombre: "McDonald's",
+                titulo: "¡Felicitaciones por ganarte un McDonald’s! 🍔",
+                imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbg7fpf1T7jkJuR7_puzRyCNeiPun2Xw7RN27B1CwDkw&s=10"
+            },
+            {
+                nombre: "Burger King",
+                titulo: "¡Felicitaciones te ganaste un buen King! 👑",
+                imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrb8kPOt96joIz3H2D6RD9olXlxSwDuBUHUWu-T7O2NdX6g3sb4hIHv18&s=10"
+            },
+            {
+                nombre: "Helado",
+                titulo: "¡Felicitaciones por ganarte un helado! 🍦",
+                imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmXHsfQh5nLzMEwKLwyKcqsW-Ps9TCUHwwqbfArdYJow&s=10"
+            }
+        ];
+
+        let opcionesMezcladas = [];
+        let premioSeleccionado = null;
+        let indiceTemp = null;
+        let sePuedeElegir = false;
+        let audioMuted = false;
+        let audioIniciado = false;
+
+        function intentarAutoplay() {
+            if (!audioIniciado) {
+                const iframe = document.getElementById('youtube-player');
+                if (iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                    iframe.contentWindow.postMessage('{"event":"command","func":"unmute","args":""}', '*');
+                }
+                audioIniciado = true;
+            }
+        }
+
+        function toggleAudio() {
+            const iframe = document.getElementById('youtube-player');
+            const musicIcon = document.getElementById('music-icon');
+
+            if (!audioIniciado) {
+                intentarAutoplay();
+                audioMuted = false;
+                musicIcon.innerText = "🎵";
+                return;
+            }
+
+            audioMuted = !audioMuted;
+
+            if (audioMuted) {
+                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                musicIcon.innerText = "🔇";
+            } else {
+                iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+                iframe.contentWindow.postMessage('{"event":"command","func":"unmute","args":""}', '*');
+                musicIcon.innerText = "🎵";
+            }
+        }
+
+        function mostrarPanel(id) {
+            intentarAutoplay();
+            [1, 2, 3, 4, 5, 6].forEach(num => {
+                const p = document.getElementById(`panel-${num}`);
+                if (p) {
+                    if (num === id) {
+                        p.classList.remove('panel-hidden');
+                        p.classList.add('panel-visible');
+                    } else {
+                        p.classList.remove('panel-visible');
+                        p.classList.add('panel-hidden');
+                    }
+                }
+            });
+        }
+
+        function iniciarJuego() {
+            intentarAutoplay();
+            mostrarPanel(2);
+            sePuedeElegir = false;
+            
+            opcionesMezcladas = [...PREMIOS].sort(() => Math.random() - 0.5);
+
+            const giftBoxes = document.querySelectorAll('.gift-box');
+            
+            document.getElementById('shuffle-title').innerText = "¡Mezclando los regalos...! 🔀";
+            document.getElementById('shuffle-subtitle').innerText = "¡Sigue la caja de tu intuición! ✨";
+
+            giftBoxes[0].classList.add('anim-shuffle-1');
+            giftBoxes[1].classList.add('anim-shuffle-2');
+            giftBoxes[2].classList.add('anim-shuffle-3');
+
+            setTimeout(() => {
+                giftBoxes[0].classList.remove('anim-shuffle-1');
+                giftBoxes[1].classList.remove('anim-shuffle-2');
+                giftBoxes[2].classList.remove('anim-shuffle-3');
+
+                document.getElementById('shuffle-title').innerText = "¡Listo! ✨";
+                document.getElementById('shuffle-subtitle').innerText = "Toca la caja que elijas";
+                
+                sePuedeElegir = true;
+            }, 3000);
+        }
+
+        function seleccionarRegalo(index) {
+            if (!sePuedeElegir) return;
+            intentarAutoplay();
+            indiceTemp = index;
+            document.getElementById('confirm-modal').classList.add('active');
+        }
+
+        function confirmarEleccionRegalo() {
+            document.getElementById('confirm-modal').classList.remove('active');
+            if (indiceTemp !== null) {
+                premioSeleccionado = opcionesMezcladas[indiceTemp];
+
+                document.getElementById('prize-img').src = premioSeleccionado.imagen;
+                document.getElementById('prize-title').innerText = premioSeleccionado.titulo;
+
+                mostrarPanel(3);
+            }
+        }
+
+        function cancelarEleccionRegalo() {
+            document.getElementById('confirm-modal').classList.remove('active');
+            indiceTemp = null;
+        }
+
+        function iniciarCarga() {
+            intentarAutoplay();
+            mostrarPanel(4);
+
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            
+            let duracion = 3000;
+            let inicio = null;
+
+            function animarCarga(timestamp) {
+                if (!inicio) inicio = timestamp;
+                let transcurrido = timestamp - inicio;
+                let porcentaje = Math.min(Math.floor((transcurrido / duracion) * 100), 100);
+
+                progressBar.style.width = `${porcentaje}%`;
+                progressText.innerText = `${porcentaje}%`;
+
+                if (transcurrido < duracion) {
+                    requestAnimationFrame(animarCarga);
+                } else {
+                    setTimeout(() => {
+                        mostrarPanel(5);
+                    }, 300);
+                }
+            }
+
+            requestAnimationFrame(animarCarga);
+        }
+
+        function guardarFechaHora(e) {
+            e.preventDefault();
+            mostrarPanel(6);
+        }
+
+        function reiniciarJuego() {
+            mostrarPanel(1);
+            document.getElementById('input-date').value = '';
+            document.getElementById('input-time').value = '';
+        }
+
+        // Puntos parpadeantes y Estrellas Fugaces continuas
+        function generarGarabatos() {
+            const container = document.getElementById('doodles-bg');
+            const puntos = ['•', '✦', '·', '✧', '.'];
+            const cantidad = 50;
+            for (let i = 0; i < cantidad; i++) {
+                const elem = document.createElement('div');
+                elem.className = 'doodle-star';
+                elem.innerText = puntos[Math.floor(Math.random() * puntos.length)];
+                elem.style.fontSize = `${Math.random() * 12 + 8}px`;
+                elem.style.top = `${Math.random() * 100}%`;
+                elem.style.left = `${Math.random() * 100}%`;
+                elem.style.setProperty('--duration', `${Math.random() * 2 + 1.5}s`);
+                elem.style.setProperty('--delay', `${Math.random() * 2}s`);
+                container.appendChild(elem);
+            }
+
+            // Crear Estrellas Fugaces continuas cada ~3 segundos
+            setInterval(() => {
+                const star = document.createElement('div');
+                star.className = 'shooting-star';
+                star.style.top = `${Math.random() * 50}%`;
+                star.style.left = `${Math.random() * 70 + 30}%`;
+                star.style.animationDuration = '2.5s';
+                container.appendChild(star);
+
+                setTimeout(() => {
+                    star.remove();
+                }, 2600);
+            }, 3000);
+        }
+
+        window.onload = function() {
+            generarGarabatos();
+            document.addEventListener('click', intentarAutoplay, { once: true });
+            document.addEventListener('touchstart', intentarAutoplay, { once: true });
+            document.addEventListener('pointerdown', intentarAutoplay, { once: true });
+        };
+    </script>
+</body>
+</html>
